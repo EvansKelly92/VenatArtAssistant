@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VenatArtAssistant (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "VenatArtAssistant (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
