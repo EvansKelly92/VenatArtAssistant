@@ -24,6 +24,14 @@ using Windows.UI.Notifications;
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
 
+
+//things to do for timer
+//Auto Save function
+//Overall work time displayed
+
+//Things to do for flow
+//remember what irl hours the user best works
+
 namespace VenatArtAssistant
 {
     public sealed partial class MainWindow : Window
@@ -170,7 +178,9 @@ namespace VenatArtAssistant
             //Timespan is recording in seconds, it is like (hours, minutes, seconds)
             waitTimer.Interval = new TimeSpan(0, 0, 1);
 
+            ContinueButton.Visibility = Visibility.Visible;
             confTime = 0;
+            toastReminder();
             waitTimer.Start();
 
         }
@@ -178,6 +188,7 @@ namespace VenatArtAssistant
         void waitTimer_Tick(object sender, object e)
         {
             confTime++;
+            TimerLog.Text = span.ToString() + "\n";
             if ((confTime >= confTimeOut) && waiting == true)
             {
                 waitTimer.Stop();
@@ -186,24 +197,27 @@ namespace VenatArtAssistant
                 span = TimeSpan.Zero;
                 oldTime = TimeSpan.Zero;
                 waiting = false;
-                timing = false;
+                ContinueButton.Visibility = Visibility.Collapsed;
                 timeToggle();
             }
 
             //user confirms to keep working
             else if (waiting == false)
             {
+                ContinueButton.Visibility = Visibility.Collapsed;
                 waitTimer.Stop();
                 DispatcherTimerSetup();
             }
         }
 
+        private void Continue_Click(object sender, RoutedEventArgs e)
+        {
+            waiting = false;
+        }
+
         //!!
         //Toast Zone
         //!!
-
-
-
         public void toastReminder()
         {
             var content = new ToastContent

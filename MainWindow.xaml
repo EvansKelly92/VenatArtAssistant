@@ -14,6 +14,7 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
         <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click"/>
+        <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed"/>
         <!-- button for testing features, will be removed later-->
         <Button Name="Test" Content="Test button for testing things" ClickMode="Release" Click="test_Click"/>
         <TextBlock Name="TimerLog" Text=":)" Foreground="red"/>
