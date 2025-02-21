@@ -36,7 +36,7 @@ namespace VenatArtAssistant
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            //place for testing functions
+            //place for testing functions will be removed later
         }
 
         //!!
