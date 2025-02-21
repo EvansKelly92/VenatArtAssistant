@@ -33,9 +33,10 @@ namespace VenatArtAssistant
             this.InitializeComponent();
         }
 
+
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            toastCheck();
+            //place for testing functions
         }
 
         //!!
@@ -54,7 +55,7 @@ namespace VenatArtAssistant
         int mouseTimeOutCount = 0;
         //will time out after 5 minutes. Timeout is in seconds devided by 10.
         public int mouseTimeout = 30;
-      
+
         Point currMouse;
         Point lastMouse;
 
@@ -178,7 +179,7 @@ namespace VenatArtAssistant
         {
             confTime++;
             if ((confTime >= confTimeOut) && waiting == true)
-            { 
+            {
                 waitTimer.Stop();
                 TimerLog.Text = "Time spent: " + span.ToString() + "\n";
                 //something here to save overall time
@@ -201,11 +202,14 @@ namespace VenatArtAssistant
         //Toast Zone
         //!!
 
-        //This code was generated from Notifactaions Visualizer App. Thank you for the code.
-        public void toastCheck()
+
+
+        public void toastReminder()
         {
-            var toastContent = new ToastContent()
+            var content = new ToastContent
             {
+                Launch = "...",
+                ActivationType = ToastActivationType.Background,
                 Visual = new ToastVisual()
                 {
                     BindingGeneric = new ToastBindingGeneric()
@@ -215,34 +219,20 @@ namespace VenatArtAssistant
                 new AdaptiveText()
                 {
                     Text = "Are you still working?"
+                },
+                new AdaptiveText()
+                {
+                    Text = "Return to the app to continue"
                 }
             }
                     }
-                },
-                Actions = new ToastActionsCustom()
-                {
-                    Buttons =
-        {
-             
-             //These will need to change to the working ones I want
-            new ToastButtonSnooze("Continue")
-            {
-                SelectionBoxId = "snoozeTime"
-            },
-            new ToastButtonDismiss("End Session")
-        }
-                },
-                Launch = "action=viewEvent&eventId=1983",
-                Scenario = ToastScenario.Reminder
+
+                }
             };
-
-            // Create the toast notification
-            var toastNotif = new ToastNotification(toastContent.GetXml());
-
-            // And send the notification
-            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+            var notifier = ToastNotificationManager.CreateToastNotifier();
+            var notification = new ToastNotification(content.GetXml());
+            notifier.Show(notification);
         }
     }
 }
-
  
