@@ -24,6 +24,14 @@ using Windows.UI.Notifications;
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
 
+
+//things to do for timer
+//Auto Save function
+//Overall work time displayed
+
+//Things to do for flow
+//remember what irl hours the user best works
+
 namespace VenatArtAssistant
 {
     public sealed partial class MainWindow : Window
@@ -33,9 +41,10 @@ namespace VenatArtAssistant
             this.InitializeComponent();
         }
 
+
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            toastCheck();
+            //place for testing functions will be removed later
         }
 
         //!!
@@ -54,7 +63,7 @@ namespace VenatArtAssistant
         int mouseTimeOutCount = 0;
         //will time out after 5 minutes. Timeout is in seconds devided by 10.
         public int mouseTimeout = 30;
-      
+
         Point currMouse;
         Point lastMouse;
 
@@ -169,7 +178,9 @@ namespace VenatArtAssistant
             //Timespan is recording in seconds, it is like (hours, minutes, seconds)
             waitTimer.Interval = new TimeSpan(0, 0, 1);
 
+            ContinueButton.Visibility = Visibility.Visible;
             confTime = 0;
+            toastReminder();
             waitTimer.Start();
 
         }
@@ -177,35 +188,42 @@ namespace VenatArtAssistant
         void waitTimer_Tick(object sender, object e)
         {
             confTime++;
+            TimerLog.Text = span.ToString() + "\n";
             if ((confTime >= confTimeOut) && waiting == true)
-            { 
+            {
                 waitTimer.Stop();
                 TimerLog.Text = "Time spent: " + span.ToString() + "\n";
                 //something here to save overall time
                 span = TimeSpan.Zero;
                 oldTime = TimeSpan.Zero;
                 waiting = false;
-                timing = false;
+                ContinueButton.Visibility = Visibility.Collapsed;
                 timeToggle();
             }
 
             //user confirms to keep working
             else if (waiting == false)
             {
+                ContinueButton.Visibility = Visibility.Collapsed;
                 waitTimer.Stop();
                 DispatcherTimerSetup();
             }
         }
 
+        private void Continue_Click(object sender, RoutedEventArgs e)
+        {
+            waiting = false;
+        }
+
         //!!
         //Toast Zone
         //!!
-
-        //This code was generated from Notifactaions Visualizer App. Thank you for the code.
-        public void toastCheck()
+        public void toastReminder()
         {
-            var toastContent = new ToastContent()
+            var content = new ToastContent
             {
+                Launch = "...",
+                ActivationType = ToastActivationType.Background,
                 Visual = new ToastVisual()
                 {
                     BindingGeneric = new ToastBindingGeneric()
@@ -215,34 +233,20 @@ namespace VenatArtAssistant
                 new AdaptiveText()
                 {
                     Text = "Are you still working?"
+                },
+                new AdaptiveText()
+                {
+                    Text = "Return to the app to continue"
                 }
             }
                     }
-                },
-                Actions = new ToastActionsCustom()
-                {
-                    Buttons =
-        {
-             
-             //These will need to change to the working ones I want
-            new ToastButtonSnooze("Continue")
-            {
-                SelectionBoxId = "snoozeTime"
-            },
-            new ToastButtonDismiss("End Session")
-        }
-                },
-                Launch = "action=viewEvent&eventId=1983",
-                Scenario = ToastScenario.Reminder
+
+                }
             };
-
-            // Create the toast notification
-            var toastNotif = new ToastNotification(toastContent.GetXml());
-
-            // And send the notification
-            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+            var notifier = ToastNotificationManager.CreateToastNotifier();
+            var notification = new ToastNotification(content.GetXml());
+            notifier.Show(notification);
         }
     }
 }
-
  
