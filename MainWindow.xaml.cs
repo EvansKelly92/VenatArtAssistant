@@ -18,6 +18,8 @@ using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Notifications;
 
+using Windows.Storage;
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -39,12 +41,31 @@ namespace VenatArtAssistant
         public MainWindow()
         {
             this.InitializeComponent();
+            LoadData();
         }
-
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            //place for testing functions will be removed later
+            //the area where I test stuff via a button
+        }
+        //!!
+        //Save and load zone
+        //!!
+
+        ApplicationDataContainer userSettings = ApplicationData.Current.LocalSettings;
+
+        private void SaveData()
+        {
+            userSettings.Values["totalTime"] = totalTime;
+        }
+
+        private void LoadData()
+        {
+            if (userSettings.Values.ContainsKey("totalTime"))
+            {
+                totalTime = (TimeSpan)userSettings.Values["totalTime"];
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+            }
         }
 
         //!!
@@ -55,6 +76,8 @@ namespace VenatArtAssistant
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
         TimeSpan span;
+        TimeSpan totalTime;
+
         bool timing = false;
 
         //checks every 10 seconds if the mouse has moved
@@ -149,9 +172,10 @@ namespace VenatArtAssistant
                 stopTime = time;
                 dispatcherTimer.Stop();
                 span = (stopTime - startTime) + span;
-                TimerLog.Text = "Time spent: " + span.ToString() + "\n";
-                //save time here
-
+                TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
+                totalTime = totalTime + span;
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                SaveData();
             }
 
 
@@ -192,8 +216,12 @@ namespace VenatArtAssistant
             if ((confTime >= confTimeOut) && waiting == true)
             {
                 waitTimer.Stop();
-                TimerLog.Text = "Time spent: " + span.ToString() + "\n";
-                //something here to save overall time
+
+                TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
+                totalTime = totalTime + span;
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                SaveData();
+
                 span = TimeSpan.Zero;
                 oldTime = TimeSpan.Zero;
                 waiting = false;
