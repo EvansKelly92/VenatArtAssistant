@@ -44,11 +44,9 @@ namespace VenatArtAssistant
             LoadData();
         }
 
-        String test = "ass";
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            test = "fuck";
-            SaveData();
+            //the area where I test stuff via a button
         }
         //!!
         //Save and load zone
@@ -58,16 +56,15 @@ namespace VenatArtAssistant
 
         private void SaveData()
         {
-            //save stuff here
-            userSettings.Values["test"] = test;
+            userSettings.Values["totalTime"] = totalTime;
         }
 
         private void LoadData()
         {
-            //load here
-            if (userSettings.Values.ContainsKey("test"))
+            if (userSettings.Values.ContainsKey("totalTime"))
             {
-                TimerLog.Text = (string)userSettings.Values["test"];
+                totalTime = (TimeSpan)userSettings.Values["totalTime"];
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
             }
         }
 
@@ -79,6 +76,8 @@ namespace VenatArtAssistant
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
         TimeSpan span;
+        TimeSpan totalTime;
+
         bool timing = false;
 
         //checks every 10 seconds if the mouse has moved
@@ -173,9 +172,10 @@ namespace VenatArtAssistant
                 stopTime = time;
                 dispatcherTimer.Stop();
                 span = (stopTime - startTime) + span;
-                TimerLog.Text = "Time spent: " + span.ToString() + "\n";
-                //save time here
-
+                TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
+                totalTime = totalTime + span;
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                SaveData();
             }
 
 
@@ -216,8 +216,12 @@ namespace VenatArtAssistant
             if ((confTime >= confTimeOut) && waiting == true)
             {
                 waitTimer.Stop();
-                TimerLog.Text = "Time spent: " + span.ToString() + "\n";
-                //something here to save overall time
+
+                TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
+                totalTime = totalTime + span;
+                TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                SaveData();
+
                 span = TimeSpan.Zero;
                 oldTime = TimeSpan.Zero;
                 waiting = false;
