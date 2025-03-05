@@ -27,9 +27,11 @@ using Windows.Storage;
 //figuring out how to make it cleaner because deadline.
 
 
-//things to do for timer
-//Auto Save function
-//Overall work time displayed
+//things to do for files
+//get file icon
+//same them in object
+//tag them
+//see if they can open in their default program
 
 //Things to do for flow
 //remember what irl hours the user best works
@@ -46,7 +48,7 @@ namespace VenatArtAssistant
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            //the area where I test stuff via a button
+            FileHandle();
         }
         //!!
         //Save and load zone
@@ -274,6 +276,33 @@ namespace VenatArtAssistant
             var notifier = ToastNotificationManager.CreateToastNotifier();
             var notification = new ToastNotification(content.GetXml());
             notifier.Show(notification);
+        }
+
+        //!!
+        //File zone
+        //!!
+
+        public void FileHandle()
+        {
+            //wipPath will need to be inputted by user
+            string wipPath = @"C:\Users\evans\OneDrive\Pictures";
+            string[] files = Directory.GetFiles(wipPath);
+
+
+            foreach (string file in files)
+            {
+                var fInfo = new FileInfo(file);
+
+                if (Directory.Exists(file) || fInfo.Attributes.HasFlag(System.IO.FileAttributes.Hidden))
+                {
+                    //skip
+                }
+                else
+                {
+                    TestText.Text = TestText.Text + System.IO.Path.GetFileName(file) + "\n";
+                }
+            }
+
         }
     }
 }
