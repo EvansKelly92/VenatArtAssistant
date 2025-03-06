@@ -19,6 +19,19 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Notifications;
 
 using Windows.Storage;
+using Microsoft.UI.Xaml.Media.Imaging;
+using System.Drawing;
+
+using System.Runtime.Serialization;
+using Image = Microsoft.UI.Xaml.Controls.Image;
+using NPOI.Util;
+using System.Drawing.Imaging;
+using Microsoft.WindowsAPICodePack.Shell;
+//using System.Windows.Media.Imaging;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -50,6 +63,8 @@ namespace VenatArtAssistant
         {
             FileHandle();
         }
+
+
         //!!
         //Save and load zone
         //!!
@@ -89,8 +104,8 @@ namespace VenatArtAssistant
         //will time out after 5 minutes. Timeout is in seconds devided by 10.
         public int mouseTimeout = 30;
 
-        Point currMouse;
-        Point lastMouse;
+        Windows.Foundation.Point currMouse;
+        Windows.Foundation.Point lastMouse;
 
 
         private void SessionToggleButton_Click(object sender, RoutedEventArgs e)
@@ -282,12 +297,16 @@ namespace VenatArtAssistant
         //File zone
         //!!
 
+        string fileName;
+
         public void FileHandle()
         {
             //wipPath will need to be inputted by user
             string wipPath = @"C:\Users\evans\OneDrive\Pictures";
             string[] files = Directory.GetFiles(wipPath);
+            TestText.Text = null;
 
+         
 
             foreach (string file in files)
             {
@@ -299,11 +318,35 @@ namespace VenatArtAssistant
                 }
                 else
                 {
-                    TestText.Text = TestText.Text + System.IO.Path.GetFileName(file) + "\n";
+                    TextBlock textBlock = new TextBlock();
+                    String name = System.IO.Path.GetFileName(file);
+                    textBlock.Text = name;
+                    textBlock.Name = name;
+                    Panel.Children.Add(textBlock);
+
+                    fileName = name;
+                    AddButton();
+                   
                 }
             }
 
         }
+
+        public void AddButton()
+        {
+             Button button = new Button();
+             button.Content = "+";
+             button.Name = fileName + "BTN";
+             button.Click += AddTag;
+             Panel.Children.Add(button);
+        }
+
+
+        private void AddTag(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).Content = "ASS";
+        }
+
     }
 }
  
