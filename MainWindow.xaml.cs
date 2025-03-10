@@ -30,6 +30,12 @@ using Microsoft.WindowsAPICodePack.Shell;
 //using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Documents;
+
+using System.Reflection;
+
+
 
 
 
@@ -299,6 +305,15 @@ namespace VenatArtAssistant
 
         string fileName;
 
+        List<WIP> wipList = new List<WIP>();
+        public class WIP : List<WIP>
+        {
+            public string name;
+            public string filePath;
+            public string[] tags;
+
+        }
+     
         public void FileHandle()
         {
             //wipPath will need to be inputted by user
@@ -306,7 +321,7 @@ namespace VenatArtAssistant
             string[] files = Directory.GetFiles(wipPath);
             TestText.Text = null;
 
-         
+
 
             foreach (string file in files)
             {
@@ -320,13 +335,23 @@ namespace VenatArtAssistant
                 {
                     TextBlock textBlock = new TextBlock();
                     String name = System.IO.Path.GetFileName(file);
-                    textBlock.Text = name;
-                    textBlock.Name = name;
+
+                    //List<WIP> wipList = new List<WIP>();
+
+                  
+                    WIP wip = new WIP();
+                    wip.name = name;
+                    wip.filePath = file;
+
+                    wipList.Add(wip);
+
+                    textBlock.Text = wip.name;
+                    textBlock.Name = wip.name + "TXTBOX";
                     Panel.Children.Add(textBlock);
 
-                    fileName = name;
+                    fileName = wip.name;
                     AddButton();
-                   
+
                 }
             }
 
@@ -334,19 +359,22 @@ namespace VenatArtAssistant
 
         public void AddButton()
         {
-             Button button = new Button();
-             button.Content = "+";
-             button.Name = fileName + "BTN";
-             button.Click += AddTag;
-             Panel.Children.Add(button);
+            Button button = new Button();
+            button.Content = "+";
+            button.Name = fileName;
+            button.Click += AddTag;
+            Panel.Children.Add(button);
         }
 
 
         private void AddTag(object sender, RoutedEventArgs e)
         {
-            ((Button)sender).Content = "ASS";
+         
+            string wipName = ((Button)sender).Name.ToString();
+            int item = wipList.FindIndex(o => o.name == wipName);
+            
+            ((Button)sender).Content = wipList.ElementAt(item).name;
+            
         }
-
     }
 }
- 
