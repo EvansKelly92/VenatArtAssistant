@@ -310,10 +310,11 @@ namespace VenatArtAssistant
         {
             public string name;
             public string filePath;
-            public string[] tags;
+            public List<string> tags = new List<string>();
 
         }
      
+        List <TextBlock> tagTextBlockList = new List<TextBlock>();
         public void FileHandle()
         {
             //wipPath will need to be inputted by user
@@ -349,21 +350,40 @@ namespace VenatArtAssistant
                     textBlock.Name = wip.name + "TXTBOX";
                     Panel.Children.Add(textBlock);
 
+                    TextBlock tb = new TextBlock();
+                    tb.Text = "iguikj";
+                    tb.Name = wip.name + "TAGS";
+                    tagTextBlockList.Add(tb);
+                    Panel.Children.Add(tb);
+
                     fileName = wip.name;
-                    AddButton();
+                    AddTagText();
 
                 }
             }
 
         }
 
-        public void AddButton()
-        {
+        List<TextBox> tagBoxList = new List<TextBox>();
+        public void AddTagText()
+        { 
+            TextBox tb = new TextBox();
+            tb.Name = fileName + "TB";
+            tb.PlaceholderText = "Add a tag";
+            tagBoxList.Add(tb);
+            Panel.Children.Add(tb);
+
             Button button = new Button();
             button.Content = "+";
             button.Name = fileName;
             button.Click += AddTag;
             Panel.Children.Add(button);
+
+            Button butt = new Button();
+            butt.Content = "X";
+            butt.Name = fileName+"DEL";
+            butt.Click += DeleteThings;
+            Panel.Children.Add(butt);
         }
 
 
@@ -373,8 +393,45 @@ namespace VenatArtAssistant
             string wipName = ((Button)sender).Name.ToString();
             int item = wipList.FindIndex(o => o.name == wipName);
             
-            ((Button)sender).Content = wipList.ElementAt(item).name;
-            
+            string boxName = wipName + "TB";
+            int tagBoxItem = tagBoxList.FindIndex(o => o.Name == boxName);
+
+            string tagItem = tagBoxList.ElementAt(tagBoxItem).Text;
+            wipList.ElementAt(item).tags.Add(tagItem);
+            tagBoxList.ElementAt(tagBoxItem).Text = "";
+
+            UpdateTagBlock(wipName, item);
         }
+
+
+        private void UpdateTagBlock(string buttName, int index)
+        {
+            string tagBoxName = buttName + "TAGS";
+            int uiNumber = tagTextBlockList.FindIndex(o => o.Name == tagBoxName);
+
+            tagTextBlockList.ElementAt(uiNumber).Text = "";
+
+            if (wipList.ElementAt(index).tags.Count > 0)
+            {
+
+                for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+                {
+                    string tag = wipList.ElementAt(index).tags.ElementAt(i).ToString();
+
+                    tagTextBlockList.ElementAt(uiNumber).Text = tagTextBlockList.ElementAt(uiNumber).Text + tag + "\n";
+                }
+            }
+            else
+            {
+                
+            }
+        }
+
+        private void DeleteThings(object sender, RoutedEventArgs e)
+        {
+           //will delete tags/file
+        }
+
+
     }
 }
