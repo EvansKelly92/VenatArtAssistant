@@ -20,6 +20,28 @@ using Windows.UI.Notifications;
 
 using Windows.Storage;
 
+using System.Runtime.Serialization;
+using Image = Microsoft.UI.Xaml.Controls.Image;
+using NPOI.Util;
+using System.Drawing.Imaging;
+using Microsoft.WindowsAPICodePack.Shell;
+//using System.Windows.Media.Imaging;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Documents;
+
+using System.Reflection;
+using  Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
+
+
+
+
+
+
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -275,6 +297,164 @@ namespace VenatArtAssistant
             var notification = new ToastNotification(content.GetXml());
             notifier.Show(notification);
         }
+
+        //!!
+        //File zone
+        //!!
+
+        string fileName;
+
+        List<WIP> wipList = new List<WIP>();
+        public class WIP : List<WIP>
+        {
+            public string name;
+            public string filePath;
+            public List<string> tags = new List<string>();
+
+        }
+     
+        List <TextBlock> tagTextBlockList = new List<TextBlock>();
+        List<TextBox> tagBoxList = new List<TextBox>();
+        public void FileHandle()
+        {
+            //wipPath will need to be inputted by user
+            string wipPath = @"C:\Users\evans\OneDrive\Pictures\Pictures\Pictures";
+            string[] files = Directory.GetFiles(wipPath);
+
+
+
+            foreach (string file in files)
+            {
+                var fInfo = new FileInfo(file);
+
+                if (Directory.Exists(file) || fInfo.Attributes.HasFlag(System.IO.FileAttributes.Hidden))
+                {
+                    //skip
+                }
+                else
+                {
+
+                   
+
+                    TextBlock textBlock = new TextBlock();
+                    String name = System.IO.Path.GetFileName(file);
+
+                    //List<WIP> wipList = new List<WIP>();
+
+                  
+                    WIP wip = new WIP();
+                    wip.name = name;
+                    wip.filePath = file;
+
+                    wipList.Add(wip);
+
+                    StackPanel stackPanel = new StackPanel();
+                    stackPanel.Name = wip.name+"STK";
+                    stackPanel.Orientation = Orientation.Vertical;
+                    Panel.Children.Add(stackPanel);
+
+                    textBlock.Text = wip.name;
+                    textBlock.Name = wip.name + "TXTBOX";
+                    textBlock.Foreground = new SolidColorBrush(Colors.DimGray);
+                    textBlock.FontFamily = new FontFamily("Calibri");
+                    stackPanel.Children.Add(textBlock);
+
+                    TextBlock tb = new TextBlock();
+                    tb.Text = "";
+                    tb.Name = wip.name + "TAGS";
+                    tb.Foreground = new SolidColorBrush(Colors.DarkCyan);
+                    textBlock.FontFamily = new FontFamily("Calibri");
+                    tagTextBlockList.Add(tb);
+                    stackPanel.Children.Add(tb);
+
+                    fileName = wip.name;
+
+                    StackPanel sp = new StackPanel();
+                    sp.Orientation = Orientation.Horizontal;
+                    stackPanel.Children.Add(sp);
+
+                    TextBox tbx = new TextBox();
+                    tbx.Name = fileName + "TB";
+                    tbx.PlaceholderText = "Add a tag";
+                    tbx.Background = new SolidColorBrush(Colors.DimGray);
+                    tbx.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                    tagBoxList.Add(tbx);
+                    sp.Children.Add(tbx);
+
+                    Button button = new Button();
+                    button.Content = "+";
+                    button.Name = fileName;
+                    button.Click += AddTag;
+                    button.Background = new SolidColorBrush(Colors.DimGray);
+                    button.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                    sp.Children.Add(button);
+
+                    Button butt = new Button();
+                    butt.Content = "X";
+                    butt.Name = fileName + "DEL";
+                    butt.Click += PopupDel;
+                    butt.Background = new SolidColorBrush(Colors.DimGray);
+                    butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                    sp.Children.Add(butt);
+
+                }
+            }
+
+        }
+
+
+        private void AddTag(object sender, RoutedEventArgs e)
+        {
+         
+            string wipName = ((Button)sender).Name.ToString();
+            int item = wipList.FindIndex(o => o.name == wipName);
+            
+            string boxName = wipName + "TB";
+            int tagBoxItem = tagBoxList.FindIndex(o => o.Name == boxName);
+
+            string tagItem = tagBoxList.ElementAt(tagBoxItem).Text;
+            wipList.ElementAt(item).tags.Add(tagItem);
+            tagBoxList.ElementAt(tagBoxItem).Text = "";
+
+            UpdateTagBlock(wipName, item);
+        }
+
+
+        private void UpdateTagBlock(string buttName, int index)
+        {
+            string tagBoxName = buttName + "TAGS";
+            int uiNumber = tagTextBlockList.FindIndex(o => o.Name == tagBoxName);
+
+            tagTextBlockList.ElementAt(uiNumber).Text = "";
+
+            if (wipList.ElementAt(index).tags.Count > 0)
+            {
+
+                for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+                {
+                    string tag = wipList.ElementAt(index).tags.ElementAt(i).ToString();
+
+                    tagTextBlockList.ElementAt(uiNumber).Text = tagTextBlockList.ElementAt(uiNumber).Text + tag + "\n";
+                }
+            }
+            else
+            {
+                
+            }
+        }
+
+        private void PopupDel(object sender, RoutedEventArgs e)
+        {
+            if (!pop.IsOpen) { 
+               pop.IsOpen = true; 
+                //add a list
+            }
+        }
+
+        private void ReturnDel(object sender, RoutedEventArgs e)
+        {
+            //delete shitfrom popup
+            pop.IsOpen = false;
+        }
     }
 }
- 
