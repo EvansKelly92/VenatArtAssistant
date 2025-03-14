@@ -22,19 +22,20 @@ using Windows.Storage;
 
 using System.Runtime.Serialization;
 using Image = Microsoft.UI.Xaml.Controls.Image;
-using NPOI.Util;
+
 using System.Drawing.Imaging;
-using Microsoft.WindowsAPICodePack.Shell;
+
 //using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+
 using System.Security.Cryptography.X509Certificates;
-using System.Windows.Documents;
+
 
 using System.Reflection;
-using  Microsoft.UI.Xaml.Media;
+//using  Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
+using Microsoft.UI.Windowing;
 
 
 
@@ -68,7 +69,7 @@ namespace VenatArtAssistant
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            //the area where I test stuff via a button
+            FileHandle();
         }
         //!!
         //Save and load zone
@@ -339,8 +340,6 @@ namespace VenatArtAssistant
                     TextBlock textBlock = new TextBlock();
                     String name = System.IO.Path.GetFileName(file);
 
-                    //List<WIP> wipList = new List<WIP>();
-
                   
                     WIP wip = new WIP();
                     wip.name = name;
@@ -350,20 +349,31 @@ namespace VenatArtAssistant
 
                     StackPanel stackPanel = new StackPanel();
                     stackPanel.Name = wip.name+"STK";
+                    stackPanel.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                    stackPanel.Margin = new Thickness(10);
                     stackPanel.Orientation = Orientation.Vertical;
+                    stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
                     Panel.Children.Add(stackPanel);
 
                     textBlock.Text = wip.name;
                     textBlock.Name = wip.name + "TXTBOX";
                     textBlock.Foreground = new SolidColorBrush(Colors.DimGray);
                     textBlock.FontFamily = new FontFamily("Calibri");
+                    textBlock.Margin = new Thickness(5);
+
+                    //these two don't actually do anything right now
+                    textBlock.TextWrapping = TextWrapping.Wrap;
+                    textBlock.FontSize = 16;
+
                     stackPanel.Children.Add(textBlock);
 
                     TextBlock tb = new TextBlock();
                     tb.Text = "";
                     tb.Name = wip.name + "TAGS";
                     tb.Foreground = new SolidColorBrush(Colors.DarkCyan);
-                    textBlock.FontFamily = new FontFamily("Calibri");
+                    tb.FontFamily = new FontFamily("Calibri");
+                    tb.FontSize = 14;
+                    tb.Margin = new Thickness(5);
                     tagTextBlockList.Add(tb);
                     stackPanel.Children.Add(tb);
 
@@ -371,6 +381,7 @@ namespace VenatArtAssistant
 
                     StackPanel sp = new StackPanel();
                     sp.Orientation = Orientation.Horizontal;
+                    sp.Margin = new Thickness(5);
                     stackPanel.Children.Add(sp);
 
                     TextBox tbx = new TextBox();

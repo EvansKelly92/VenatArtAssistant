@@ -8,7 +8,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:wrapPanel1="using:System.Windows.Controls"
     mc:Ignorable="d"
     Title="VenatArtAssistant">
 
@@ -23,7 +22,7 @@
         </Grid.RowDefinitions>
 
 
-        <StackPanel Name="" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="WhiteSmoke">
+        <StackPanel Name="" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="LightGray">
             <Button Name="Test" Content="Test button for testing things" ClickMode="Release" Click="test_Click" Background="black"/>
          
             <ScrollView Name="scrollPan" Height="450">
