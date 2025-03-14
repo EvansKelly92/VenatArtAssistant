@@ -11,18 +11,48 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxc="using:ABI.Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Title="VenatArtAssistant">
-    <StackPanel Name="Panel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Name="Test" Content="Test button for testing things" ClickMode="Release" Click="test_Click"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <ScrollView Height="500">
-            <TextBlock Name="TestText" Text="Test Text zone" Foreground="red"/>
-        </ScrollView>
-        
-        <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click"/>
-        <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed"/>
-        <!-- button for testing features, will be removed later-->
-        <TextBlock Name="TimerLog" Text=":)" Foreground="red"/>
-        <TextBlock Name="TotalTimeLog" Text="Total Session Time: 00:00:00" Foreground="red"/>
-    </StackPanel>
-    
+
+        <StackPanel Name="" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
+            <StackPanel Orientation="Horizontal" Margin="50,25,10,10">
+                <TextBox Name="pathBOX" PlaceholderText="Add the path to a file or folder and press the + button to add" Background="DarkSlateGray"/>
+                <Button Name="AddPathBTN" Content="+" ClickMode="Release" Click="path_Click" Background="DarkSlateGray"/>
+            </StackPanel>
+
+            <ScrollView Name="scrollPan" Height="450">
+
+                <VariableSizedWrapGrid Name="Panel" Orientation="Horizontal" MaximumRowsOrColumns="4" >
+                </VariableSizedWrapGrid>
+
+            </ScrollView>
+
+            <!-- button for testing features, will be removed later-->
+            <Popup Name="pop">
+                <StackPanel Name="popPanel" Orientation="Vertical">
+                    <TextBlock Text="Select what you want to delete"/>
+                    <Button Name="returnBTN" Content="Return" Click="ReturnDel"/>
+                </StackPanel>
+            </Popup>
+        </StackPanel>
+        <StackPanel Name="timerPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Background="DarkSlateGray" Grid.Row="1" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Vertical" Margin="100,75,10,10">
+                <TextBlock Name="TimerLog" Text="Click start to begin" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
+                <TextBlock Name="TotalTimeLog" Text="Total Session Time: 00:00:00" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="50,75,10,10">
+                <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click" Background="WhiteSmoke" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
+                <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed" Background="MediumSpringGreen" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
 </Window>

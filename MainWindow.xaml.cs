@@ -33,7 +33,15 @@ using System.Windows.Media.Imaging;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Documents;
 
+
 using System.Reflection;
+//using  Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
+using Microsoft.UI.Windowing;
+using System.Drawing;
+
+
 
 
 
@@ -65,12 +73,11 @@ namespace VenatArtAssistant
             LoadData();
         }
 
-        private void test_Click(object sender, RoutedEventArgs e)
+        private void path_Click(object sender, RoutedEventArgs e)
         {
-            FileHandle();
+            string wPath = pathBOX.Text;
+            FileHandle(wPath);
         }
-
-
         //!!
         //Save and load zone
         //!!
@@ -315,75 +322,109 @@ namespace VenatArtAssistant
         }
      
         List <TextBlock> tagTextBlockList = new List<TextBlock>();
-        public void FileHandle()
+        List<TextBox> tagBoxList = new List<TextBox>();
+        public void FileHandle(string wPath)
         {
             //wipPath will need to be inputted by user
-            string wipPath = @"C:\Users\evans\OneDrive\Pictures";
-            string[] files = Directory.GetFiles(wipPath);
-            TestText.Text = null;
-
-
-
-            foreach (string file in files)
+            string wipPath = @wPath;
+            try
             {
-                var fInfo = new FileInfo(file);
+                string[] files = Directory.GetFiles(wipPath);
 
-                if (Directory.Exists(file) || fInfo.Attributes.HasFlag(System.IO.FileAttributes.Hidden))
+
+                foreach (string file in files)
                 {
-                    //skip
-                }
-                else
-                {
-                    TextBlock textBlock = new TextBlock();
-                    String name = System.IO.Path.GetFileName(file);
+                    var fInfo = new FileInfo(file);
 
-                    //List<WIP> wipList = new List<WIP>();
+                    if (Directory.Exists(file) || fInfo.Attributes.HasFlag(System.IO.FileAttributes.Hidden))
+                    {
+                        //skip
+                    }
+                    else
+                    {
 
-                  
-                    WIP wip = new WIP();
-                    wip.name = name;
-                    wip.filePath = file;
 
-                    wipList.Add(wip);
 
-                    textBlock.Text = wip.name;
-                    textBlock.Name = wip.name + "TXTBOX";
-                    Panel.Children.Add(textBlock);
+                        TextBlock textBlock = new TextBlock();
+                        String name = System.IO.Path.GetFileName(file);
 
-                    TextBlock tb = new TextBlock();
-                    tb.Text = "iguikj";
-                    tb.Name = wip.name + "TAGS";
-                    tagTextBlockList.Add(tb);
-                    Panel.Children.Add(tb);
 
-                    fileName = wip.name;
-                    AddTagText();
+                        WIP wip = new WIP();
+                        wip.name = name;
+                        wip.filePath = file;
 
+                        wipList.Add(wip);
+
+                        StackPanel stackPanel = new StackPanel();
+                        stackPanel.Name = wip.name + "STK";
+                        stackPanel.Background = new SolidColorBrush(Colors.LightBlue);
+                        stackPanel.Margin = new Thickness(50, 10, 10, 10);
+                        stackPanel.Orientation = Orientation.Vertical;
+                        stackPanel.MinHeight = 200;
+                        stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                        Panel.Children.Add(stackPanel);
+
+                        textBlock.Text = wip.name;
+                        textBlock.Name = wip.name + "TXTBOX";
+                        textBlock.Foreground = new SolidColorBrush(Colors.DarkSlateGray);
+                        textBlock.FontFamily = new FontFamily("Calibri");
+                        textBlock.Margin = new Thickness(5);
+
+                        //these two don't actually do anything right now
+                        textBlock.TextWrapping = TextWrapping.Wrap;
+                        textBlock.FontSize = 16;
+
+                        stackPanel.Children.Add(textBlock);
+
+                        TextBlock tb = new TextBlock();
+                        tb.Text = "";
+                        tb.Name = wip.name + "TAGS";
+                        tb.Foreground = new SolidColorBrush(Colors.DarkCyan);
+                        tb.FontFamily = new FontFamily("Calibri");
+                        tb.FontSize = 14;
+                        tb.Margin = new Thickness(5);
+                        tagTextBlockList.Add(tb);
+                        stackPanel.Children.Add(tb);
+
+                        fileName = wip.name;
+
+                        StackPanel sp = new StackPanel();
+                        sp.Orientation = Orientation.Horizontal;
+                        sp.Margin = new Thickness(5);
+                        stackPanel.Children.Add(sp);
+
+                        TextBox tbx = new TextBox();
+                        tbx.Name = fileName + "TB";
+                        tbx.PlaceholderText = "Add a tag";
+                        tbx.Background = new SolidColorBrush(Colors.DimGray);
+                        tbx.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                        tagBoxList.Add(tbx);
+                        sp.Children.Add(tbx);
+
+                        Button button = new Button();
+                        button.Content = "+";
+                        button.Name = fileName;
+                        button.Click += AddTag;
+                        button.Background = new SolidColorBrush(Colors.DimGray);
+                        button.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                        sp.Children.Add(button);
+
+                        Button butt = new Button();
+                        butt.Content = "X";
+                        butt.Name = fileName + "DEL";
+                        butt.Click += PopupDel;
+                        butt.Background = new SolidColorBrush(Colors.DimGray);
+                        butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                        sp.Children.Add(butt);
+
+                    }
                 }
             }
 
-        }
-
-        List<TextBox> tagBoxList = new List<TextBox>();
-        public void AddTagText()
-        { 
-            TextBox tb = new TextBox();
-            tb.Name = fileName + "TB";
-            tb.PlaceholderText = "Add a tag";
-            tagBoxList.Add(tb);
-            Panel.Children.Add(tb);
-
-            Button button = new Button();
-            button.Content = "+";
-            button.Name = fileName;
-            button.Click += AddTag;
-            Panel.Children.Add(button);
-
-            Button butt = new Button();
-            butt.Content = "X";
-            butt.Name = fileName+"DEL";
-            butt.Click += DeleteThings;
-            Panel.Children.Add(butt);
+            catch (System.IO.DirectoryNotFoundException)
+            {
+                return;
+            }
         }
 
 
@@ -427,11 +468,18 @@ namespace VenatArtAssistant
             }
         }
 
-        private void DeleteThings(object sender, RoutedEventArgs e)
+        private void PopupDel(object sender, RoutedEventArgs e)
         {
-           //will delete tags/file
+            if (!pop.IsOpen) { 
+               pop.IsOpen = true; 
+                //add a list
+            }
         }
 
-
+        private void ReturnDel(object sender, RoutedEventArgs e)
+        {
+            //delete shitfrom popup
+            pop.IsOpen = false;
+        }
     }
 }
