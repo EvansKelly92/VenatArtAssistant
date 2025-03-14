@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
 
-        <StackPanel Name="" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="LightGray">
+        <StackPanel Name="" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
             <Button Name="Test" Content="Test button for testing things" ClickMode="Release" Click="test_Click" Background="black"/>
          
             <ScrollView Name="scrollPan" Height="450">
@@ -40,14 +40,14 @@
                 </StackPanel>
             </Popup>
         </StackPanel>
-        <StackPanel Name="timerPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Background="DimGray" Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Name="timerPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Background="DarkSlateGray" Grid.Row="1" Grid.ColumnSpan="2">
             <StackPanel Orientation="Vertical" Margin="100,75,10,10">
                 <TextBlock Name="TimerLog" Text="Click start to begin" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
                 <TextBlock Name="TotalTimeLog" Text="Total Session Time: 00:00:00" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="50,75,10,10">
                 <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click" Background="WhiteSmoke" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
-                <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed" Background="MediumSpringGreen" Width="125" Height="50" Foreground="black" HorizontalAlignment="Center" FontFamily="Calibri"/>
+                <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed" Background="MediumSpringGreen" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
             </StackPanel>
         </StackPanel>
     </Grid>

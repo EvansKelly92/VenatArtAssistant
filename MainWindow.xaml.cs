@@ -36,6 +36,7 @@ using System.Reflection;
 using Microsoft.UI;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Microsoft.UI.Windowing;
+using System.Drawing;
 
 
 
@@ -110,8 +111,8 @@ namespace VenatArtAssistant
         //will time out after 5 minutes. Timeout is in seconds devided by 10.
         public int mouseTimeout = 30;
 
-        Point currMouse;
-        Point lastMouse;
+        Windows.Foundation.Point currMouse;
+        Windows.Foundation.Point lastMouse;
 
 
         private void SessionToggleButton_Click(object sender, RoutedEventArgs e)
@@ -349,7 +350,7 @@ namespace VenatArtAssistant
 
                     StackPanel stackPanel = new StackPanel();
                     stackPanel.Name = wip.name+"STK";
-                    stackPanel.Background = new SolidColorBrush(Colors.WhiteSmoke);
+                    stackPanel.Background = new SolidColorBrush(Colors.LightBlue);
                     stackPanel.Margin = new Thickness(10);
                     stackPanel.Orientation = Orientation.Vertical;
                     stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
@@ -357,7 +358,7 @@ namespace VenatArtAssistant
 
                     textBlock.Text = wip.name;
                     textBlock.Name = wip.name + "TXTBOX";
-                    textBlock.Foreground = new SolidColorBrush(Colors.DimGray);
+                    textBlock.Foreground = new SolidColorBrush(Colors.DarkSlateGray);
                     textBlock.FontFamily = new FontFamily("Calibri");
                     textBlock.Margin = new Thickness(5);
 
@@ -412,7 +413,6 @@ namespace VenatArtAssistant
             }
 
         }
-
 
         private void AddTag(object sender, RoutedEventArgs e)
         {
