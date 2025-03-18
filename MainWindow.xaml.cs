@@ -27,7 +27,7 @@ using Image = Microsoft.UI.Xaml.Controls.Image;
 using NPOI.Util;
 using System.Drawing.Imaging;
 using Microsoft.WindowsAPICodePack.Shell;
-//using System.Windows.Media.Imaging;
+
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Security.Cryptography.X509Certificates;
@@ -35,33 +35,34 @@ using System.Windows.Documents;
 
 
 using System.Reflection;
-//using  Microsoft.UI.Xaml.Media;
+
 using Microsoft.UI;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
 using Microsoft.UI.Windowing;
-using System.Drawing;
+using NPOI.SS.Formula.Functions;
 
 
 
-
-
-
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
 
 
 //things to do for files
-//get file icon
-//same them in object
-//tag them
-//see if they can open in their default program
+//delete files and tags
 
 //Things to do for flow
 //remember what irl hours the user best works
+//remember best tags
+//ask after session which file they worked on
+//show best hours/tags
+
+//save load
+//save and load file lists
+
+//other
+//cleanup
+//export
 
 namespace VenatArtAssistant
 {
@@ -468,18 +469,47 @@ namespace VenatArtAssistant
             }
         }
 
+        List<CheckBox> stuffInPop = new List<CheckBox>();
         private void PopupDel(object sender, RoutedEventArgs e)
         {
-            if (!pop.IsOpen) { 
-               pop.IsOpen = true; 
+            if (!pop.IsOpen)
+            {
+                pop.IsOpen = true;
                 //add a list
+                string buttName = ((Button)sender).Name.ToString();
+                string wipName = buttName.Remove(buttName.Length - 3);
+                CheckBox checkBox = new CheckBox();
+                checkBox.Content = wipName;
+                checkBox.Foreground = new SolidColorBrush(Colors.AliceBlue);
+                checkBox.Margin = new Thickness(5);
+                PopPanel.Children.Add(checkBox);
+
+                stuffInPop.Add(checkBox);
+
+                int index = wipList.FindIndex(o => o.name == wipName);
+                if (wipList.ElementAt(index).tags.Count > 0)
+                {
+                    for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+                    {
+                        CheckBox cb = new CheckBox();
+                        string tag = wipList.ElementAt(index).tags.ElementAt(i).ToString();
+                        cb.Content = tag;
+                        cb.Foreground = new SolidColorBrush(Colors.AliceBlue);
+                        cb.Margin = new Thickness(5);
+                        PopPanel.Children.Add(cb);
+
+                        stuffInPop.Add(cb);
+
+                    }
+                }
             }
         }
 
         private void ReturnDel(object sender, RoutedEventArgs e)
         {
-            //delete shitfrom popup
             pop.IsOpen = false;
+            PopPanel.Children.Clear();
+            stuffInPop.Clear();
         }
     }
 }

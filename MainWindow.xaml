@@ -27,21 +27,28 @@
                 <TextBox Name="pathBOX" PlaceholderText="Add the path to a file or folder and press the + button to add" Background="DarkSlateGray"/>
                 <Button Name="AddPathBTN" Content="+" ClickMode="Release" Click="path_Click" Background="DarkSlateGray"/>
             </StackPanel>
-
+            
+             <Popup Name="pop" Margin="50,10,10,10">
+                <StackPanel Orientation="Vertical" Background="DarkSlateGray" BorderBrush="black" BorderThickness="2" >
+                    <TextBlock Text="Select what you want to delete from Venat (Your file will still be in your computer folder)" Foreground="WhiteSmoke" Margin="5,5,5,5"/>
+                    <StackPanel Name="PopPanel" Orientation="Vertical">
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Name="DelBtn" Content="Delete" Background="WhiteSmoke" Foreground="DarkSlateGray"/>
+                        <Button Name="returnBTN" Content="Return" Click="ReturnDel" Background="WhiteSmoke" Foreground="DarkSlateGray"/>
+                    </StackPanel>
+                </StackPanel>
+            </Popup>
+            
             <ScrollView Name="scrollPan" Height="450">
-
+        
                 <VariableSizedWrapGrid Name="Panel" Orientation="Horizontal" MaximumRowsOrColumns="4" >
                 </VariableSizedWrapGrid>
 
             </ScrollView>
 
-            <!-- button for testing features, will be removed later-->
-            <Popup Name="pop">
-                <StackPanel Name="popPanel" Orientation="Vertical">
-                    <TextBlock Text="Select what you want to delete"/>
-                    <Button Name="returnBTN" Content="Return" Click="ReturnDel"/>
-                </StackPanel>
-            </Popup>
+          
+            
         </StackPanel>
         <StackPanel Name="timerPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Background="DarkSlateGray" Grid.Row="1" Grid.ColumnSpan="2">
             <StackPanel Orientation="Vertical" Margin="100,75,10,10">
