@@ -34,7 +34,7 @@
                     <StackPanel Name="PopPanel" Orientation="Vertical">
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Name="DelBtn" Content="Delete" Background="WhiteSmoke" Foreground="DarkSlateGray"/>
+                        <Button Name="DelBtn" Content="Delete" Click="DeleteDel" Background="WhiteSmoke" Foreground="DarkSlateGray"/>
                         <Button Name="returnBTN" Content="Return" Click="ReturnDel" Background="WhiteSmoke" Foreground="DarkSlateGray"/>
                     </StackPanel>
                 </StackPanel>

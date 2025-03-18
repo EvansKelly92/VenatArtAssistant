@@ -324,6 +324,7 @@ namespace VenatArtAssistant
      
         List <TextBlock> tagTextBlockList = new List<TextBlock>();
         List<TextBox> tagBoxList = new List<TextBox>();
+        List<StackPanel> wipStacksList = new List<StackPanel>();
         public void FileHandle(string wPath)
         {
             //wipPath will need to be inputted by user
@@ -364,6 +365,7 @@ namespace VenatArtAssistant
                         stackPanel.MinHeight = 200;
                         stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
                         Panel.Children.Add(stackPanel);
+                        wipStacksList.Add(stackPanel);
 
                         textBlock.Text = wip.name;
                         textBlock.Name = wip.name + "TXTBOX";
@@ -469,6 +471,11 @@ namespace VenatArtAssistant
             }
         }
 
+
+        //!!
+        //deleting zone
+        //!!
+
         List<CheckBox> stuffInPop = new List<CheckBox>();
         private void PopupDel(object sender, RoutedEventArgs e)
         {
@@ -482,6 +489,8 @@ namespace VenatArtAssistant
                 checkBox.Content = wipName;
                 checkBox.Foreground = new SolidColorBrush(Colors.AliceBlue);
                 checkBox.Margin = new Thickness(5);
+                checkBox.Checked += wipChecked;
+                checkBox.Unchecked += wipUnchecked;
                 PopPanel.Children.Add(checkBox);
 
                 stuffInPop.Add(checkBox);
@@ -510,6 +519,68 @@ namespace VenatArtAssistant
             pop.IsOpen = false;
             PopPanel.Children.Clear();
             stuffInPop.Clear();
+        }
+
+        private void wipChecked(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < stuffInPop.Count; i++) {
+                stuffInPop.ElementAt(i).IsChecked = true;
+                 }
+        }
+
+        private void wipUnchecked(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < stuffInPop.Count; i++)
+            {
+                stuffInPop.ElementAt(i).IsChecked = false;
+            }
+        }
+
+        private void DeleteDel(object sender, RoutedEventArgs e)
+        {
+            pop.IsOpen = false;
+            string objName = stuffInPop.ElementAt(0).Content.ToString();
+            int index = wipList.FindIndex(o => o.name == objName);
+
+            int numOfDeletedTags = 0;
+
+            for (int i = 0; i < stuffInPop.Count; i++)
+            {
+               
+                    if (stuffInPop.ElementAt(0).IsChecked == true)
+                    {
+                        string stackName = objName + "STK";
+                        int stackIndex = wipStacksList.FindIndex(o => o.Name == stackName);
+
+                        Panel.Children.RemoveAt(stackIndex);
+                        wipStacksList.RemoveAt(stackIndex);
+
+                        wipList.RemoveAt(index);
+                        break;
+                    }
+              
+                    else if (stuffInPop.ElementAt(i).IsChecked == true)
+                    {
+                        wipList.ElementAt(index).tags.RemoveAt(i - 1 - numOfDeletedTags);
+                         numOfDeletedTags++;
+                    } 
+               
+            }
+                PopPanel.Children.Clear();
+                stuffInPop.Clear();
+        }
+
+        private void RefreshList(string name, int index)
+        {
+            string tagBoxName = name + "TAGS";
+            int tagIndex = tagTextBlockList.FindIndex(o => o.Name == tagBoxName);
+
+            tagTextBlockList.ElementAt(tagIndex).Text = "";
+
+            for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+            {
+                //put tags on list again
+            }
         }
     }
 }
