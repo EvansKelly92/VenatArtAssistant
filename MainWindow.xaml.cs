@@ -568,6 +568,7 @@ namespace VenatArtAssistant
             }
                 PopPanel.Children.Clear();
                 stuffInPop.Clear();
+            RefreshList(objName, index);
         }
 
         private void RefreshList(string name, int index)
@@ -576,10 +577,13 @@ namespace VenatArtAssistant
             int tagIndex = tagTextBlockList.FindIndex(o => o.Name == tagBoxName);
 
             tagTextBlockList.ElementAt(tagIndex).Text = "";
-
-            for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+            if (wipList.ElementAt(index).tags.Count > 0)
             {
-                //put tags on list again
+                for (int i = 0; i < wipList.ElementAt(index).tags.Count; i++)
+                {
+                    string tag = wipList.ElementAt(index).tags.ElementAt(i).ToString();
+                   tagTextBlockList.ElementAt(tagIndex).Text = tagTextBlockList.ElementAt(tagIndex).Text + tag + "\n";
+                }
             }
         }
     }
