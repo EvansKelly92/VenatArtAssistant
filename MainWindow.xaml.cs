@@ -44,6 +44,34 @@ using NPOI.SS.Formula.Functions;
 
 
 
+using System.Runtime.Serialization;
+using Image = Microsoft.UI.Xaml.Controls.Image;
+
+using System.Drawing.Imaging;
+
+//using System.Windows.Media.Imaging;
+using System.Threading.Tasks;
+
+using System.Security.Cryptography.X509Certificates;
+
+
+using System.Reflection;
+//using  Microsoft.UI.Xaml.Media;
+using Microsoft.UI;
+using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
+using Microsoft.UI.Windowing;
+using System.Drawing;
+
+
+
+
+
+
+
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
 
@@ -78,6 +106,7 @@ namespace VenatArtAssistant
         {
             string wPath = pathBOX.Text;
             FileHandle(wPath);
+
         }
         //!!
         //Save and load zone
@@ -324,6 +353,7 @@ namespace VenatArtAssistant
      
         List <TextBlock> tagTextBlockList = new List<TextBlock>();
         List<TextBox> tagBoxList = new List<TextBox>();
+
         List<StackPanel> wipStacksList = new List<StackPanel>();
         public void FileHandle(string wPath)
         {
@@ -511,11 +541,13 @@ namespace VenatArtAssistant
 
                     }
                 }
+
             }
         }
 
         private void ReturnDel(object sender, RoutedEventArgs e)
         {
+
             pop.IsOpen = false;
             PopPanel.Children.Clear();
             stuffInPop.Clear();
@@ -585,6 +617,7 @@ namespace VenatArtAssistant
                    tagTextBlockList.ElementAt(tagIndex).Text = tagTextBlockList.ElementAt(tagIndex).Text + tag + "\n";
                 }
             }
+
         }
     }
 }
