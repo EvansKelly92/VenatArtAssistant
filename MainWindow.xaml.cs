@@ -2,69 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-
-using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Notifications;
-
 using Windows.Storage;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Drawing;
-
-using System.Runtime.Serialization;
-using Image = Microsoft.UI.Xaml.Controls.Image;
-using NPOI.Util;
-using System.Drawing.Imaging;
-using Microsoft.WindowsAPICodePack.Shell;
-
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Documents;
-
-
-using System.Reflection;
-
 using Microsoft.UI;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
-using Microsoft.UI.Windowing;
-using NPOI.SS.Formula.Functions;
-
-
-
-
-using System.Runtime.Serialization;
-using Image = Microsoft.UI.Xaml.Controls.Image;
-
-using System.Drawing.Imaging;
-
-//using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
-
-using System.Security.Cryptography.X509Certificates;
-
-
-using System.Reflection;
-//using  Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
-using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
-using Microsoft.UI.Windowing;
-using System.Drawing;
-
-
-
-
 
 
 
@@ -74,10 +19,6 @@ using System.Drawing;
 
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
-
-
-//things to do for files
-//delete files and tags
 
 //Things to do for flow
 //remember what irl hours the user best works
@@ -102,12 +43,14 @@ namespace VenatArtAssistant
             LoadData();
         }
 
+        //button for loading new files
         private void path_Click(object sender, RoutedEventArgs e)
         {
             string wPath = pathBOX.Text;
             FileHandle(wPath);
 
         }
+
         //!!
         //Save and load zone
         //!!
@@ -117,6 +60,7 @@ namespace VenatArtAssistant
         private void SaveData()
         {
             userSettings.Values["totalTime"] = totalTime;
+            //add wips and tags
         }
 
         private void LoadData()
@@ -126,6 +70,7 @@ namespace VenatArtAssistant
                 totalTime = (TimeSpan)userSettings.Values["totalTime"];
                 TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
             }
+            //add wips and tags
         }
 
         //!!
