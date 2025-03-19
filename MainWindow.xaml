@@ -22,12 +22,15 @@
         </Grid.RowDefinitions>
 
 
-        <StackPanel Name="" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
-            <Button Name="Test" Content="Test button for testing things" ClickMode="Release" Click="test_Click" Background="black"/>
-         
+        <StackPanel Name="" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
+            <StackPanel Orientation="Horizontal" Margin="50,25,10,10">
+                <TextBox Name="pathBOX" PlaceholderText="Add the path to a file or folder and press the + button to add" Background="DarkSlateGray"/>
+                <Button Name="AddPathBTN" Content="+" ClickMode="Release" Click="path_Click" Background="DarkSlateGray"/>
+         </StackPanel>
+            
             <ScrollView Name="scrollPan" Height="450">
              
-                <VariableSizedWrapGrid Name="Panel" Orientation="Horizontal" MaximumRowsOrColumns="4">
+                <VariableSizedWrapGrid Name="Panel" Orientation="Horizontal" MaximumRowsOrColumns="4" >
                 </VariableSizedWrapGrid>
                 
             </ScrollView>

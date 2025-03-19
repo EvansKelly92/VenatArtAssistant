@@ -68,7 +68,7 @@ namespace VenatArtAssistant
             LoadData();
         }
 
-        private void test_Click(object sender, RoutedEventArgs e)
+        private void path_Click(object sender, RoutedEventArgs e)
         {
             FileHandle();
         }
@@ -351,8 +351,9 @@ namespace VenatArtAssistant
                     StackPanel stackPanel = new StackPanel();
                     stackPanel.Name = wip.name+"STK";
                     stackPanel.Background = new SolidColorBrush(Colors.LightBlue);
-                    stackPanel.Margin = new Thickness(10);
+                    stackPanel.Margin = new Thickness(50, 10, 10, 10);
                     stackPanel.Orientation = Orientation.Vertical;
+                    stackPanel.MinHeight = 200; 
                     stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
                     Panel.Children.Add(stackPanel);
 
