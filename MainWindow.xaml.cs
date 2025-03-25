@@ -21,12 +21,14 @@ using NPOI.SS.Formula.Functions;
 using System.Windows.Documents;
 using System.Security.Policy;
 
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 
 //All code that interacts with the window is stored here. I hate it but I'm not going to spend time 
 //figuring out how to make it cleaner because deadline.
+
 
 //Things to do for flow
 //remember what irl hours the user best works
@@ -35,6 +37,7 @@ using System.Security.Policy;
 //show best hours/tags
 
 //save load
+
 //save and load best working time and best tags
 
 //other
@@ -50,6 +53,7 @@ namespace VenatArtAssistant
             this.InitializeComponent();
             LoadData();
         }
+
 
         //button for loading new files
         private void path_Click(object sender, RoutedEventArgs e)
@@ -324,6 +328,7 @@ namespace VenatArtAssistant
         }
 
         //!!
+
         //Hour Save Zone
         //
         public int startHour;
@@ -373,6 +378,7 @@ namespace VenatArtAssistant
         string fileName;
 
         List<WIP> wipList = new List<WIP>();
+
         public class WIP 
         {
             // public string FileSavePath = @"C:\Users\evans\Source\Repos\VenatArtAssistant1\save.txt";
@@ -484,8 +490,10 @@ namespace VenatArtAssistant
                         butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
                         sp.Children.Add(butt);
 
+
                         savedStuff = true;
                         
+
                     }
                 }
             }
@@ -494,6 +502,7 @@ namespace VenatArtAssistant
             {
                 return;
             }
+
             
             SaveData();
         }
@@ -577,6 +586,7 @@ namespace VenatArtAssistant
                 butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
                 sp.Children.Add(butt);
             }
+
         }
 
 
@@ -594,7 +604,9 @@ namespace VenatArtAssistant
             tagBoxList.ElementAt(tagBoxItem).Text = "";
 
             UpdateTagBlock(wipName, item);
+
             SaveData();
+
         }
 
 
@@ -721,7 +733,9 @@ namespace VenatArtAssistant
                 PopPanel.Children.Clear();
                 stuffInPop.Clear();
             RefreshList(objName, index);
+
             SaveData();
+
         }
 
         private void RefreshList(string name, int index)
