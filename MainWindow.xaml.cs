@@ -2,70 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-
-using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Windows.UI.Notifications;
-
 using Windows.Storage;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Drawing;
-
-using System.Runtime.Serialization;
-using Image = Microsoft.UI.Xaml.Controls.Image;
-using NPOI.Util;
-using System.Drawing.Imaging;
-using Microsoft.WindowsAPICodePack.Shell;
-
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Documents;
-
-
-using System.Reflection;
-
 using Microsoft.UI;
 using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
-using Microsoft.UI.Windowing;
+using static VenatArtAssistant.MainWindow;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using System.ComponentModel.Design.Serialization;
+using System.Xml;
 using NPOI.SS.Formula.Functions;
-
-
-
-
-using System.Runtime.Serialization;
-using Image = Microsoft.UI.Xaml.Controls.Image;
-
-using System.Drawing.Imaging;
-
-//using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
-
-using System.Security.Cryptography.X509Certificates;
-
-
-using System.Reflection;
-//using  Microsoft.UI.Xaml.Media;
-using Microsoft.UI;
-using FontFamily = Microsoft.UI.Xaml.Media.FontFamily;
-using Microsoft.UI.Windowing;
-using System.Drawing;
-
-
-
-
-
+using System.Windows.Documents;
+using System.Security.Policy;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -76,9 +30,6 @@ using System.Drawing;
 //figuring out how to make it cleaner because deadline.
 
 
-//things to do for files
-//delete files and tags
-
 //Things to do for flow
 //remember what irl hours the user best works
 //remember best tags
@@ -86,7 +37,8 @@ using System.Drawing;
 //show best hours/tags
 
 //save load
-//save and load file lists
+
+//save and load best working time and best tags
 
 //other
 //cleanup
@@ -102,12 +54,15 @@ namespace VenatArtAssistant
             LoadData();
         }
 
+
+        //button for loading new files
         private void path_Click(object sender, RoutedEventArgs e)
         {
             string wPath = pathBOX.Text;
             FileHandle(wPath);
 
         }
+
         //!!
         //Save and load zone
         //!!
@@ -117,8 +72,15 @@ namespace VenatArtAssistant
         private void SaveData()
         {
             userSettings.Values["totalTime"] = totalTime;
+            userSettings.Values["wips"] = savedStuff;
+
+            string json = JsonConvert.SerializeObject(wipList, Newtonsoft.Json.Formatting.Indented);
+            userSettings.Values["list"] = json;
+
+            
         }
 
+   
         private void LoadData()
         {
             if (userSettings.Values.ContainsKey("totalTime"))
@@ -126,7 +88,34 @@ namespace VenatArtAssistant
                 totalTime = (TimeSpan)userSettings.Values["totalTime"];
                 TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
             }
+
+            savedStuff = (bool)userSettings.Values["wips"];
+
+            if (savedStuff == true)
+            {
+                Object value = userSettings.Values["list"];
+                wipList = JsonConvert.DeserializeObject<List<WIP>>(value.ToString());
+                AddWipStack();
+            }
         }
+
+        public static T ReadFromJsonFile<T>(string filePath) where T : new()
+        {
+            TextReader reader = null;
+            try
+            {
+                reader = new StreamReader(filePath);
+                var fileContents = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<T>(fileContents);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+
+
 
         //!!
         //Timer zone for tracking time
@@ -167,7 +156,7 @@ namespace VenatArtAssistant
             }
             else
             {
-
+                startHour = CheckLocalTime();
                 SessionToggle.Content = ("Stop Session");
                 timing = true;
                 DispatcherTimerSetup();
@@ -229,6 +218,7 @@ namespace VenatArtAssistant
 
             if (timing == false)
             {
+                endHour = CheckLocalTime();
                 stopTime = time;
                 dispatcherTimer.Stop();
                 span = (stopTime - startTime) + span;
@@ -275,6 +265,7 @@ namespace VenatArtAssistant
             TimerLog.Text = span.ToString() + "\n";
             if ((confTime >= confTimeOut) && waiting == true)
             {
+                endHour = CheckLocalTime();
                 waitTimer.Stop();
 
                 TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
@@ -337,16 +328,62 @@ namespace VenatArtAssistant
         }
 
         //!!
+
+        //Hour Save Zone
+        //
+        public int startHour;
+        public int endHour;
+
+        public int CheckLocalTime()
+        {
+            DateTime now = DateTime.Now;
+            int currHour = now.Hour;
+            return currHour;
+        }
+
+        //one for each hour
+        public class HourScore
+        {
+            public int h00 { get; set; }
+            public int h01 { get; set; }
+            public int h02 { get; set; }
+            public int h03 { get; set; }
+            public int h04 { get; set; }
+            public int h05 { get; set; }
+            public int h06 { get; set; }
+            public int h07 { get; set; }
+            public int h08 {  get; set; }
+            public int h09 { get; set; }
+            public int h10 { get; set; }
+            public int h11 { get; set; }
+            public int h12 { get; set; }
+            public int h13 { get; set; }
+            public int h14 { get; set; }
+            public int h15 { get; set; }
+            public int h16 { get; set; }
+            public int h17 { get; set; }
+            public int h18 { get; set; }
+            public int h19 { get; set; }
+            public int h20 { get; set; }
+            public int h21 { get; set; }
+            public int h22 { get; set; }
+            public int h23 { get; set; }
+            public int h24 { get; set; }
+        }
+
+        //!!
         //File zone
         //!!
 
         string fileName;
 
         List<WIP> wipList = new List<WIP>();
-        public class WIP : List<WIP>
+
+        public class WIP 
         {
-            public string name;
-            public string filePath;
+            // public string FileSavePath = @"C:\Users\evans\Source\Repos\VenatArtAssistant1\save.txt";
+            public string name { get; set; }
+            public string filePath { get; set; }
             public List<string> tags = new List<string>();
 
         }
@@ -355,6 +392,9 @@ namespace VenatArtAssistant
         List<TextBox> tagBoxList = new List<TextBox>();
 
         List<StackPanel> wipStacksList = new List<StackPanel>();
+
+        bool savedStuff = false;
+
         public void FileHandle(string wPath)
         {
             //wipPath will need to be inputted by user
@@ -450,6 +490,10 @@ namespace VenatArtAssistant
                         butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
                         sp.Children.Add(butt);
 
+
+                        savedStuff = true;
+                        
+
                     }
                 }
             }
@@ -458,6 +502,91 @@ namespace VenatArtAssistant
             {
                 return;
             }
+
+            
+            SaveData();
+        }
+
+        public void AddWipStack()
+        {
+            for (int i = 0; i < wipList.Count; i++)
+            {
+                TextBlock textBlock = new TextBlock();
+
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Name = wipList.ElementAt(i).name + "STK";
+                stackPanel.Background = new SolidColorBrush(Colors.LightBlue);
+                stackPanel.Margin = new Thickness(50, 10, 10, 10);
+                stackPanel.Orientation = Orientation.Vertical;
+                stackPanel.MinHeight = 200;
+                stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                Panel.Children.Add(stackPanel);
+                wipStacksList.Add(stackPanel);
+
+                textBlock.Text = wipList.ElementAt(i).name;
+                textBlock.Name = wipList.ElementAt(i).name + "TXTBOX";
+                textBlock.Foreground = new SolidColorBrush(Colors.DarkSlateGray);
+                textBlock.FontFamily = new FontFamily("Calibri");
+                textBlock.Margin = new Thickness(5);
+
+                //these two don't actually do anything right now
+                textBlock.TextWrapping = TextWrapping.Wrap;
+                textBlock.FontSize = 16;
+
+                stackPanel.Children.Add(textBlock);
+
+                TextBlock tb = new TextBlock();
+                if (wipList.ElementAt(i).tags.Count > 0)
+                {
+                    for (int j = 0; j < wipList.ElementAt(i).tags.Count; j++)
+                    {
+                        tb.Text = tb.Text + wipList.ElementAt(i).tags.ElementAt(j) + "\n";
+                    }
+                }
+                else
+                {
+                    tb.Text = "";
+                }
+                tb.Name = wipList.ElementAt(i).name + "TAGS";
+                tb.Foreground = new SolidColorBrush(Colors.DarkCyan);
+                tb.FontFamily = new FontFamily("Calibri");
+                tb.FontSize = 14;
+                tb.Margin = new Thickness(5);
+                tagTextBlockList.Add(tb);
+                stackPanel.Children.Add(tb);
+
+                fileName = wipList.ElementAt(i).name;
+
+                StackPanel sp = new StackPanel();
+                sp.Orientation = Orientation.Horizontal;
+                sp.Margin = new Thickness(5);
+                stackPanel.Children.Add(sp);
+
+                TextBox tbx = new TextBox();
+                tbx.Name = fileName + "TB";
+                tbx.PlaceholderText = "Add a tag";
+                tbx.Background = new SolidColorBrush(Colors.DimGray);
+                tbx.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                tagBoxList.Add(tbx);
+                sp.Children.Add(tbx);
+
+                Button button = new Button();
+                button.Content = "+";
+                button.Name = fileName;
+                button.Click += AddTag;
+                button.Background = new SolidColorBrush(Colors.DimGray);
+                button.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                sp.Children.Add(button);
+
+                Button butt = new Button();
+                butt.Content = "X";
+                butt.Name = fileName + "DEL";
+                butt.Click += PopupDel;
+                butt.Background = new SolidColorBrush(Colors.DimGray);
+                butt.Foreground = new SolidColorBrush(Colors.WhiteSmoke);
+                sp.Children.Add(butt);
+            }
+
         }
 
 
@@ -475,6 +604,9 @@ namespace VenatArtAssistant
             tagBoxList.ElementAt(tagBoxItem).Text = "";
 
             UpdateTagBlock(wipName, item);
+
+            SaveData();
+
         }
 
 
@@ -601,6 +733,9 @@ namespace VenatArtAssistant
                 PopPanel.Children.Clear();
                 stuffInPop.Clear();
             RefreshList(objName, index);
+
+            SaveData();
+
         }
 
         private void RefreshList(string name, int index)
