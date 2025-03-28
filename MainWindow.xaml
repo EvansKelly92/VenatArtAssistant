@@ -20,10 +20,10 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+    
 
 
-
-        <StackPanel Name="" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" Background="DimGray">
             <StackPanel Orientation="Horizontal" Margin="50,25,10,10">
                 <TextBox Name="pathBOX" PlaceholderText="Add the path to a file or folder and press the + button to add" Background="DarkSlateGray"/>
                 <Button Name="AddPathBTN" Content="+" ClickMode="Release" Click="path_Click" Background="DarkSlateGray"/>
@@ -61,26 +61,8 @@
                 <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click" Background="WhiteSmoke" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
                 <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed" Background="MediumSpringGreen" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
             </StackPanel>
-        </StackPanel>
-    </Grid>
-
-
-            <!-- button for testing features, will be removed later-->
-            <Popup Name="pop">
-                <StackPanel Name="popPanel" Orientation="Vertical">
-                    <TextBlock Text="Select what you want to delete"/>
-                    <Button Name="returnBTN" Content="Return" Click="ReturnDel"/>
-                </StackPanel>
-            </Popup>
-        </StackPanel>
-        <StackPanel Name="timerPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Background="DarkSlateGray" Grid.Row="1" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Vertical" Margin="100,75,10,10">
-                <TextBlock Name="TimerLog" Text="Click start to begin" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
-                <TextBlock Name="TotalTimeLog" Text="Total Session Time: 00:00:00" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
-            </StackPanel>
             <StackPanel Orientation="Vertical" Margin="50,75,10,10">
-                <Button Name="SessionToggle" Content="Start Session" ClickMode="Release" Click="SessionToggleButton_Click" Background="WhiteSmoke" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
-                <Button Name="ContinueButton" Content="Continue Session" ClickMode="Release" Click="Continue_Click" Visibility="Collapsed" Background="MediumSpringGreen" Width="125" Height="50" Foreground="DimGray" HorizontalAlignment="Center" FontFamily="Calibri"/>
+                <TextBlock Name="BestHourText" Foreground="WhiteSmoke" FontSize="24" FontFamily="Calibri"/>
             </StackPanel>
         </StackPanel>
     </Grid>
