@@ -20,6 +20,7 @@ using System.Xml;
 using NPOI.SS.Formula.Functions;
 using System.Windows.Documents;
 using System.Security.Policy;
+using System.Diagnostics.Contracts;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -77,10 +78,36 @@ namespace VenatArtAssistant
             string json = JsonConvert.SerializeObject(wipList, Newtonsoft.Json.Formatting.Indented);
             userSettings.Values["list"] = json;
 
-            
+            string json2 = JsonConvert.SerializeObject(tagScoreList);
+            userSettings.Values["tagScore"] = json2;
+
+            userSettings.Values["h0"] = h0;
+            userSettings.Values["h1"] = h1;
+            userSettings.Values["h2"] = h2;
+            userSettings.Values["h3"] = h3;
+            userSettings.Values["h4"] = h4;
+            userSettings.Values["h5"] = h5;
+            userSettings.Values["h6"] = h6;
+            userSettings.Values["h7"] = h7;
+            userSettings.Values["h8"] = h8;
+            userSettings.Values["h9"] = h9;
+            userSettings.Values["h10"] = h10;
+            userSettings.Values["h11"] = h11;
+            userSettings.Values["h12"] = h12;
+            userSettings.Values["h13"] = h13;
+            userSettings.Values["h14"] = h14;
+            userSettings.Values["h15"] = h15;
+            userSettings.Values["h16"] = h16;
+            userSettings.Values["h17"] = h17;
+            userSettings.Values["h18"] = h18;
+            userSettings.Values["h19"] = h19;
+            userSettings.Values["h20"] = h20;
+            userSettings.Values["h21"] = h21;
+            userSettings.Values["h22"] = h22;
+            userSettings.Values["h23"] = h23;
         }
 
-   
+
         private void LoadData()
         {
             if (userSettings.Values.ContainsKey("totalTime"))
@@ -97,24 +124,42 @@ namespace VenatArtAssistant
                 wipList = JsonConvert.DeserializeObject<List<WIP>>(value.ToString());
                 AddWipStack();
             }
-        }
-
-        public static T ReadFromJsonFile<T>(string filePath) where T : new()
-        {
-            TextReader reader = null;
-            try
+            if (userSettings.Values.ContainsKey("h0"))
             {
-                reader = new StreamReader(filePath);
-                var fileContents = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(fileContents);
+               
+               h0 = (int)userSettings.Values["h0"];
+               h1 = (int)userSettings.Values["h1"];
+               h2 = (int)userSettings.Values["h2"];
+               h3 = (int)userSettings.Values["h3"];
+                h4 = (int)userSettings.Values["h4"];
+                h5 = (int)userSettings.Values["h5"];
+                h6 = (int)userSettings.Values["h6"];
+                h7 = (int)userSettings.Values["h7"];
+                h8 = (int)userSettings.Values["h8"];
+                h9 = (int)userSettings.Values["h9"];
+                h10 = (int)userSettings.Values["h10"];
+                h11 = (int)userSettings.Values["h11"];
+                h12 = (int)userSettings.Values["h12"];
+                h13 = (int)userSettings.Values["h13"];
+                h14 = (int)userSettings.Values["h14"];
+               h15 = (int)userSettings.Values["h15"];
+                h16 = (int)userSettings.Values["h16"];
+                h17 = (int)userSettings.Values["h17"];
+                h18 = (int)userSettings.Values["h18"];
+                h19 = (int)userSettings.Values["h19"];
+                h20 = (int)userSettings.Values["h20"];
+                h21 = (int)userSettings.Values["h21"];
+                h22 = (int)userSettings.Values["h22"];
+                h23 = (int)userSettings.Values["h23"];
+                BestHourText.Text = "Best work hour: " + Sort();
             }
-            finally
+            if (userSettings.Values.ContainsKey("tagScore"))
             {
-                if (reader != null)
-                    reader.Close();
+                Object val = userSettings.Values["tagScore"];
+                tagScoreList = JsonConvert.DeserializeObject<List<TagScore>>(val.ToString());
+                BestTagText.Text = SortTag();
             }
         }
-
 
 
         //!!
@@ -225,6 +270,8 @@ namespace VenatArtAssistant
                 TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
                 totalTime = totalTime + span;
                 TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                PopulatePop();
+                AddToHour();
                 SaveData();
             }
 
@@ -271,12 +318,12 @@ namespace VenatArtAssistant
                 TimerLog.Text = "Time spent this session: " + span.ToString() + "\n";
                 totalTime = totalTime + span;
                 TotalTimeLog.Text = "Total Session Time: " + totalTime.ToString();
+                AddToHour();
                 SaveData();
-
-                span = TimeSpan.Zero;
-                oldTime = TimeSpan.Zero;
+                PopulatePop();
                 waiting = false;
                 ContinueButton.Visibility = Visibility.Collapsed;
+                
                 timeToggle();
             }
 
@@ -326,9 +373,178 @@ namespace VenatArtAssistant
             var notification = new ToastNotification(content.GetXml());
             notifier.Show(notification);
         }
-
+        //!!
+        //Tag calulate zone
         //!!
 
+        List<TagScore> tagScoreList = new List<TagScore>();
+        public class TagScore
+        {
+            public string tagName { get; set; }
+            public int score { get; set; }
+        }
+
+        private void PopulatePop()
+        {
+            tagPop.IsOpen = true;
+            if (wipList.Count == 0)
+            {
+                //skip
+            }
+            else
+            {
+                for (int i = 0; i < wipList.Count; i++)
+                {
+                    CheckBox checkBox = new CheckBox();
+                    checkBox.Tag = wipList.ElementAt(i).name;
+                    checkBox.Content = wipList.ElementAt(i).name;
+                   // checkBox.Checked += subChecked;
+                    //checkBox.Unchecked += subUnchecked;
+                    checkBox.Foreground = new SolidColorBrush(Colors.DarkSlateGray);
+                    scrollPop.Children.Add(checkBox);
+                    subCB.Add(checkBox);
+                }
+            }
+            CheckBox cb = new CheckBox();
+            cb.Tag = "Something New";
+            cb.Content = "Something New";
+           // cb.Checked += subChecked;
+          //  cb.Unchecked += subUnchecked;
+            cb.Foreground = new SolidColorBrush(Colors.DarkSlateGray);
+            scrollPop.Children.Add(cb);
+            subCB.Add(cb);
+
+
+        }
+
+        List<CheckBox> subCB = new List<CheckBox>();
+
+        private void Sub_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < subCB.Count; i++)
+            {
+                if (subCB[i].IsChecked == true)
+                {
+                    int uiNumber = wipList.FindIndex(o => o.name == subCB.ElementAt(i).Content.ToString());
+                    if (uiNumber >= 0)
+                    {
+                        {
+                            if (wipList.ElementAt(uiNumber).tags.Count >= 0)
+                            {
+                                for (int j = 0; j < wipList.ElementAt(uiNumber).tags.Count; j++)
+                                {
+                                    int tagnum = tagScoreList.FindIndex(o => o.tagName == wipList.ElementAt(uiNumber).tags.ElementAt(j));
+                                    if (tagnum >= 0)
+                                    {
+                                        tagScoreList.ElementAt(tagnum).score = tagScoreList.ElementAt(tagnum).score + span.Minutes;
+                                    }
+                                    else
+                                    {
+                                        TagScore ts = new TagScore();
+                                        ts.tagName = wipList.ElementAt(uiNumber).tags.ElementAt(j);
+                                        ts.score = span.Minutes;
+                                        tagScoreList.Add(ts);
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                //do nothing
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //it was the something new tag
+                        int subNum = tagScoreList.FindIndex(o => o.tagName == subCB.ElementAt(i).Content.ToString());
+                        if (subNum >= 0)
+                        {
+                            tagScoreList.ElementAt(subNum).score = tagScoreList.ElementAt(subNum).score + span.Minutes;
+                        }
+                        else
+                        {
+                            TagScore ts = new TagScore();
+                            ts.tagName = "New";
+                            ts.score = span.Minutes;
+                            tagScoreList.Add(ts);
+                        }
+                    }
+                }
+             
+                
+            }
+            SaveData();
+            BestTagText.Text = SortTag();
+                tagPop.IsOpen = false;
+                scrollPop.Children.Clear();
+                subCB.Clear();
+                span = TimeSpan.Zero;
+                oldTime = TimeSpan.Zero;
+            
+        }
+
+        public string SortTag()
+        {
+            int tsLen = tagScoreList.Count;
+            int[] tsScoreArr = new int[tsLen];
+            for (int i = 0; i < tsScoreArr.Length; i++)
+            {
+                tsScoreArr[i] = tagScoreList.ElementAt(i).score;
+            }
+
+            string[] tsName = new string[tsLen];
+            for (int i = 0; i < tsName.Length; i++)
+            {
+                tsName[i] = tagScoreList.ElementAt(i).tagName;
+            }
+
+            int temp;
+            string temp2;
+            for (int j = 0; j <= tsScoreArr.Length - 2; j++)
+            {
+                for (int i = 0; i <= tsScoreArr.Length - 2; i++)
+                {
+                    if (tsScoreArr[i] > tsScoreArr[i + 1])
+                    {
+                        temp = tsScoreArr[i + 1];
+                        temp2 = tsName[i + 1];
+                        tsScoreArr[i + 1] = tsScoreArr[i];
+                        tsName[i + 1] = tsName[i];
+                        tsScoreArr[i] = temp;
+                        tsName[i] = temp2;
+                    }
+                }
+            }
+
+            string results;
+            int first = tsLen - 1;
+            int second = tsLen - 2;
+            int third = tsLen - 3;
+            if (tsLen >= 3)
+            {
+             results = tsName[first] + ", " + tsName[second] + ", " + tsName[third];
+            }
+            else if (tsLen == 2) {
+                results = tsName[first] + ", " + tsName[second];
+            }
+            else {
+                results = tsName[first];
+            }
+
+            return ("Best Tags: " + results);
+        }
+
+        private void Skip_Click(object sender, RoutedEventArgs e)
+        {
+            tagPop.IsOpen = false;
+            scrollPop.Children.Clear();
+            subCB.Clear();
+            span = TimeSpan.Zero;
+            oldTime = TimeSpan.Zero;
+        }
+
+        //!!
         //Hour Save Zone
         //
         public int startHour;
@@ -341,35 +557,213 @@ namespace VenatArtAssistant
             return currHour;
         }
 
-        //one for each hour
-        public class HourScore
+        public void AddToHour()
         {
-            public int h00 { get; set; }
-            public int h01 { get; set; }
-            public int h02 { get; set; }
-            public int h03 { get; set; }
-            public int h04 { get; set; }
-            public int h05 { get; set; }
-            public int h06 { get; set; }
-            public int h07 { get; set; }
-            public int h08 {  get; set; }
-            public int h09 { get; set; }
-            public int h10 { get; set; }
-            public int h11 { get; set; }
-            public int h12 { get; set; }
-            public int h13 { get; set; }
-            public int h14 { get; set; }
-            public int h15 { get; set; }
-            public int h16 { get; set; }
-            public int h17 { get; set; }
-            public int h18 { get; set; }
-            public int h19 { get; set; }
-            public int h20 { get; set; }
-            public int h21 { get; set; }
-            public int h22 { get; set; }
-            public int h23 { get; set; }
-            public int h24 { get; set; }
+            int min = span.Minutes;
+            if (min == 0)
+            {
+                return;
+            }
+            if(startHour == endHour)
+            {
+                string hName = "h" + startHour.ToString();
+                DumbMethodForAdding(hName, min);
+                
+            }
+            else
+            {
+                if (endHour > startHour)
+                {
+                    int hourSpan = (endHour - startHour) + 1;
+                    int minToAdd = min/hourSpan;
+                    for (int i = startHour; i <= endHour; i++)
+                    {
+                        string hName = "h" + i.ToString(); 
+                        DumbMethodForAdding(hName, minToAdd);
+                    }    
+                }
+                else
+                {
+                    int hourSpan = (23 - startHour) + (endHour + 1) + 1; 
+                    int minToAdd = min/hourSpan;
+                    for (int i = startHour; i >= 0; i--)
+                    {
+                        string hName = "h" + i.ToString();
+                        DumbMethodForAdding(hName, minToAdd);
+                    }    
+                    for (int i = 23; i >= startHour; i--)
+                    {
+                        string hourName = "h" + i.ToString();
+                        DumbMethodForAdding(hourName, minToAdd);
+                    }    
+                }
+            }
         }
+
+        public void DumbMethodForAdding(string hourName, int minAdd)
+        {
+            
+            switch (hourName)
+                {
+                case "h0":
+                    h0 = h0 + minAdd;
+                    break;
+                case "h1":
+                    h1 = h1 + minAdd;
+                    break;
+                case "h2":
+                    h2 = h2 + minAdd;
+                    break;
+                case "h3":
+                    h3 = h3 + minAdd;
+                    break;
+                case "h4":
+                    h4 = h4 + minAdd;
+                    break;
+                case "h5":
+                    h5 = h5 + minAdd;
+                    break;
+                case "h6":
+                    h6 = h6 + minAdd;
+                    break;
+                case "h7":
+                    h7 = h7 + minAdd;
+                    break;
+                case "h8":
+                    h8 = h8 + minAdd;
+                    break;
+                case "h9":
+                    h9 = h9 + minAdd;
+                    break;
+                case "h10":
+                    h10 = h10 + minAdd;
+                    break;
+                case "h11":
+                    h11 = h11 + minAdd;
+                    break;
+                case "h12":
+                    h12 = h12 + minAdd;
+                    break;
+                case "h13":
+                    h13 = h13 + minAdd;
+                    break;
+                case "h14":
+                    h14 = h14 + minAdd;
+                    break;
+                case "h15":
+                    h15 = h15 + minAdd;
+                    break;
+                case "h16":
+                    h16 = h16 + minAdd;
+                    break;
+                case "h17":
+                    h17 = h17 + minAdd;
+                    break;
+                case "h18":
+                    h18 = h18 + minAdd;
+                    break;
+                case "h19":
+                    h19 = h19 + minAdd;
+                    break;
+                case "h20":
+                    h20 = h20 + minAdd;
+                    break;
+                case "h21":
+                    h21 = h21 + minAdd;
+                    break;
+                case "h22":
+                    h22 = h22 + minAdd;
+                    break;
+                case "h23":
+                    h23 = h23 + minAdd;
+                    break;
+                default:
+                    break;
+            }
+            BestHourText.Text = "Best working hour: " + Sort();
+
+        }
+
+        //one for each hour
+        public int h0;
+        public int h1;
+        public int h2;
+        public int h3;
+        public int h4;
+        public int h5;
+        public int h6;
+        public int h7;
+        public int h8;
+        public int h9;
+        public int h10;
+        public int h11;
+        public int h12;
+        public int h13;
+        public int h14;
+        public int h15;
+        public int h16;
+        public int h17;
+        public int h18;
+        public int h19;
+        public int h20;
+        public int h21;
+        public int h22;
+        public int h23; 
+
+            public string Sort()
+            {
+                int[] hourArr = new int[24];
+                hourArr[0] = h0;
+                hourArr[1] = h1;
+                hourArr[2] = h2;
+                hourArr[3] = h3;
+                hourArr[4] = h4;
+                hourArr[5] = h5;
+                hourArr[6] = h6;
+                hourArr[7] = h7;
+                hourArr[8] = h8;
+                hourArr[9] = h9;
+                hourArr[10] = h10;
+                hourArr[11] = h11;
+                hourArr[12] = h12;
+                hourArr[13] = h13;
+                hourArr[14] = h14;
+                hourArr[15] = h15;
+                hourArr[16] = h16;
+                hourArr[17] = h17;
+                hourArr[18] = h18;
+                hourArr[19] = h19;
+                hourArr[20] = h20;
+                hourArr[21] = h21;
+                hourArr[22] = h22;
+                hourArr[23] = h23;
+                string[] hourName = new string[24];
+                for (int i = 0; i < hourName.Length; i++)
+                {
+                    hourName[i] = i.ToString() + ":00 ";
+                }
+
+                int temp;
+                string temp2;
+                for (int j = 0; j <= hourArr.Length - 2; j++)
+                {
+                    for (int i = 0; i <= hourArr.Length - 2; i++)
+                    {
+                        if (hourArr[i] > hourArr[i + 1])
+                        {
+                            temp = hourArr[i + 1];
+                            temp2 = hourName[i + 1];
+                            hourArr[i + 1] = hourArr[i];
+                            hourName[i + 1] = hourName[i];
+                            hourArr[i] = temp;
+                            hourName[i] = temp2;
+                        }
+                    }
+                }
+
+                return (hourName[23]);
+            }
+            
 
         //!!
         //File zone
